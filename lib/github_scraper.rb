@@ -1,14 +1,15 @@
 require_relative "./scraper"
 
 class Github_scraper < Scraper
+   DEFAULT_USER = "Mayowa-Ojo"
    # username - first argument to command line
    first, *rest = ARGV
-   @@username = first
+   @@username = first ? first : DEFAULT_USER
    @start_urls = ["https://github.com/#{@@username}"]
    @@user_info = {}
 
-   def scrape_profile_info
-      doc = browser.current_response
+   def scrape_profile_info doc
+      doc = browser.current_response if !doc
       name = doc.css('.p-name').text.gsub(/\n/, "").strip
       username = doc.css(".p-nickname").text.gsub(/\n/, "").strip
       bio = doc.css(".user-profile-bio > div").text.gsub(/\n/, "").strip
@@ -29,15 +30,15 @@ class Github_scraper < Scraper
             :repo_title => repo_title, :repo_description => repo_description, :repo_language => repo_language
          }
       end
-      
+
       save_to "#{@@username}_profile.json".downcase!, @@user_info, format: :json
    end
 
    def parse(response, url:, data: {})
       scrape_profile_info
       @@user_info
-      p "done"
+      puts "done"
    end
 end
 
-Github_scraper.crawl!
+Github_scraper.crawl! if !ENV["TEST"]
