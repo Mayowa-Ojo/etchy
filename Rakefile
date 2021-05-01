@@ -4,6 +4,6 @@ task :run do
    ruby "lib/scraper.rb"
 end
 
-task :test do
-   ruby "test/scraper_test.rb"
+task :test_github do
+   system('TEST=true ruby "test/github_scraper_test.rb"')
 end
