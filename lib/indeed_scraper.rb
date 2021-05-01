@@ -4,7 +4,7 @@ class Indeed_scraper < Scraper
    @start_urls = ["https://www.indeed.com/jobs?q=software+engineer&l=New+York%2C+NY"]
    @@jobs = []
 
-   def scrape_indeed
+   def scrape_jobs
       doc = browser.current_response
       returned_jobs = doc.css('td#resultsCol')
       returned_jobs.css('div.jobsearch-SerpJobCard').each do |char_element|
@@ -25,7 +25,7 @@ class Indeed_scraper < Scraper
    end
 
    def parse(response, url:, data: {})
-      scrape_indeed
+      scrape_jobs
       @@jobs
       puts "jobs length: " + @@jobs.length.to_s
    end
